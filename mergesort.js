@@ -24,4 +24,4 @@ function merge(left, right) {
     return result.concat(left.slice(j)).concat(right.slice(k));
 }
 let exampleArray = [26, 35, 11, 197, 4]
-let sortedArray = mergeSort(exampleArray)
+console.log(mergeSort(exampleArray))

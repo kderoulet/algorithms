@@ -36,7 +36,7 @@ Mergesort accepts an array as an argument, and it returns a new array with all o
 
 #### So how does mergesort work?
 
-Essentially, mergesort breaks our array down into a bunch of tiny arrays, and then it reassembles our initial array in ascending order.
+Essentially, mergesort breaks our array down into a bunch of tiny arrays, and then it reassembles our initial array in ascending order. As an intermediate step, the arrays are reassembled into two sorted arrays, and those sorted arrays are compared in order to give us a final array.
 
 So, let's say that we have the example array `[26, 35, 11, 197, 4]`
 
@@ -103,4 +103,20 @@ function merge(left, right) {
 
 #### An aside: Big O notation
 
-An advantage of mergesort is that its runtime is consistant O(n log n). Of course, in some situations, this can be a disadvantage--mergesort takes just as long to sort an already ordered array as a randomly ordered array. The next sorting algorithm we'll look at has a best-case runtime of O(n) but a worst-case runtime of 0(n^2).
+An advantage of mergesort is that its runtime is consistant O(n log n). Of course, in some situations, this can be a disadvantage--mergesort takes just as long to sort an already ordered array as a randomly ordered array. The next sorting algorithm we'll look at--called insertion sort--has a best-case runtime of O(n) but a worst-case runtime of 0(n^2).
+
+## Insertion Sort 
+
+Insertion sort is an interesting sorting algorithm because it closely mimicks how people might sort things in real life. Similar to real-life sorting, it can be quite efficient for small data sets but inefficient for very large data sets. 
+
+#### So what is insertion sort?
+
+#### How insertion sort works
+
+#### Insertion sort implemented
+
+## Heap Sort
+
+## Quick Sort
+
+## The Fibonacci Sequence
