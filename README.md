@@ -1,4 +1,5 @@
-A repository for learning algorithms. 
+# Algorithms
+A repository for learning algorithms and other relevant computer science topics, all modeled in JavaScript. 
 
 ## Intro to Recursion (recursion.js)
 
@@ -26,7 +27,11 @@ Now, the factorial example might not be the best use case for a recursive functi
 
 #### An aside: Recursion or Iteration?
 
-All iterative functions can be written recursively, and all recursive functions can be written iteratively. So, when do we choose one or the other? Essentially, when an iterative solution makes sense, it's a good time for for iteration. When recursion makes more sense then it's a good time for recursion. Often, those with traditional computer science backgrounds prefer recursive approaches, while developers without traditional computer science backgrounds tend to first learn iterative solutions (especially for-loops). Iterative functions often make the most sense with linear processes, such as comparing each value in an array to each value in another array. Recursive functions tend to be an especially good option when a "divide and conquer" approach is needed for solving a problem, such as our next section: mergesort.
+All iterative functions can be written recursively, and all recursive functions can be written iteratively. So, when do we choose one or the other? Essentially, when an iterative solution makes sense, it's a good time for for iteration. When recursion makes more sense then it's a good time for recursion. Often, those with traditional computer science backgrounds prefer recursive approaches, while developers without traditional computer science backgrounds tend to first learn iterative solutions (especially for-loops). Iterative functions often make the most sense with linear processes, such as comparing each value in an array to each value in another array. Recursive functions tend to be an especially good option when a "divide and conquer" approach is needed for solving a problem, such as our next alogorithm: mergesort.
+
+## Big O notation
+
+Before diving into sorting algorithms, it's worth understanding the way in which sorting algorithms are evaluated. An advantage of mergesort is that its runtime is consistant O(n log n). Of course, in some situations, this can be a disadvantage--mergesort takes just as long to sort an already ordered array as a randomly ordered array. 
 
 ## Mergesort (mergesort.js)
 
@@ -101,21 +106,67 @@ function merge(left, right) {
 }
 ```
 
-#### An aside: Big O notation
-
-An advantage of mergesort is that its runtime is consistant O(n log n). Of course, in some situations, this can be a disadvantage--mergesort takes just as long to sort an already ordered array as a randomly ordered array. The next sorting algorithm we'll look at--called insertion sort--has a best-case runtime of O(n) but a worst-case runtime of 0(n^2).
+The next sorting algorithm we'll look at--called insertion sort--has a best-case runtime of O(n) but a worst-case runtime of 0(n^2).
 
 ## Insertion Sort 
 
-Insertion sort is an interesting sorting algorithm because it closely mimicks how people might sort things in real life. Similar to real-life sorting, it can be quite efficient for small data sets but inefficient for very large data sets. 
-
-#### So what is insertion sort?
+Insertion sort is an interesting sorting algorithm because it closely mimicks how people might sort things (such as a hand of cards) in real life. Similar to real-life sorting, it can be quite efficient for small data sets but inefficient for very large data sets. 
 
 #### How insertion sort works
 
+Insertion sort mutates the original array into a sorted array rather than returning a new sorted array. Insertion sort iterates through an array, checking to see whether or not each value is less than the value before it. If the value is less than the previous value, then insertion sort iterates back through the array to find the value's proper position in the array. Given an example array of `[7, 5, 2, 1, 4, 3, 6]`, an insertion sort would look something like this:
+
+```js
+[ 7, 5, 2, 1, 4, 3, 6 ]
+[ 5, 7, 2, 1, 4, 3, 6 ]
+[ 2, 5, 7, 1, 4, 3, 6 ]
+[ 1, 2, 5, 7, 4, 3, 6 ]
+[ 1, 2, 4, 5, 7, 3, 6 ]
+[ 1, 2, 3, 4, 5, 7, 6 ]
+[ 1, 2, 3, 4, 5, 6, 7 ]
+```
+
+The runtime of insertion sort is totally dependent on the state of the given array. The best-case scenario is that insertion sort is given an already sorted array, in which case the runtime is O(n). An array which is sorted in reverse order(ex: `[3, 2, 1]`) will have a runtime of O(n^2). 
+
 #### Insertion sort implemented
+```js
+function insertionSort(arr) {
+    // declare our index variables
+    let i;
+    let j;
+    // iterate through the array
+    for (i = 0; i < arr.length; i++) {
+        // store current position's value in a temporary variable
+        let temp = arr[i]
+        // check the value(s) before the current position in the array
+        for (j = i-1; j > -1 && arr[j] > temp; j--) {
+            arr[j+1] = arr[j]
+        }
+        arr[j+1] = temp;
+    }
+    return arr;
+}
+
+let exampleArray = [7, 5, 2, 1, 4, 3, 6]
+insertionSort(exampleArray)
+```
+
+Insertion short is very useful for small datasets, but its worst-case (and average) run-time make it too slow to use for large datasets. The next sort method we will look at is heapsort, which has a worst-case sort time of O(n log n), making it much more suitable for handling large sets of data. 
 
 ## Heap Sort
+
+Heapsort is considerably more complex than the sorting methods we have examined so far, so this might be a wild ride. Hold on tight!
+
+#### Comparison with Merge Sort
+
+Earlier in this document, we explored merge sort, an efficient and popular sorting method. Both merge sort and heap sort have runtimes of O(n log n). So, what is difference between merge sort and heap sort?
+
+Heap sort typically runs faster on slower machines, as heap sort requires less external memory than merge sort. However, on modern computers, merge sort tends to be more efficient because it accesses values sequentially rather than accessing at various points throughout the array, as heapsort does. Additionally, merge sort is "stable" in that equivalent values will retain their ordering, while they could be swapped using heap sort. So, although the two sorting methods are very similar, individual use cases could prefer one sorting method to the other.
+
+#### Okay, but how does heap sort work?
+
+#### Heapsort in action
+
 
 ## Quick Sort
 

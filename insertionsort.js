@@ -2,11 +2,11 @@ function insertionSort(arr) {
     let i;
     let j;
     for (i = 0; i < arr.length; i++) {
-        let value = arr[i]
-        for (j = i-1; j > -1 && arr[j] > value; j--) {
+        let temp = arr[i]
+        for (j = i-1; j > -1 && arr[j] > temp; j--) {
             arr[j+1] = arr[j]
         }
-        arr[j+1] = value;
+        arr[j+1] = temp;
     }
     return arr;
 }
