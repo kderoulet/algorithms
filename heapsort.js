@@ -1,49 +1,49 @@
 var arrayLength;
 
-function buildHeap(input) {
-    arrayLength = input.length;
+function buildHeap(array) {
+    arrayLength = array.length;
 
     for (var i = Math.floor(arrayLength / 2); i >= 0; i -= 1) {
-        heapify(input, i);
+        heapify(array, i);
     }
 }
 
-function heapify(input, i) {
+function heapify(array, i) {
     var left = 2 * i + 1;
     var right = 2 * i + 2;
     var largest = i;
 
-    if (left < arrayLength && input[left] > input[largest]) {
+    if (left < arrayLength && array[left] > array[largest]) {
         largest = left;
     }
 
-    if (right < arrayLength && input[right] > input[largest]) {
+    if (right < arrayLength && array[right] > array[largest]) {
         largest = right;
     }
 
     if (largest != i) {
-        swap(input, i, largest);
-        heapify(input, largest);
+        swap(array, i, largest);
+        heapify(array, largest);
     }
 }
 
-function swap(input, index_A, index_B) {
-    var temp = input[index_A];
+function swap(array, index_A, index_B) {
+    var temp = array[index_A];
 
-    input[index_A] = input[index_B];
-    input[index_B] = temp;
+    array[index_A] = array[index_B];
+    array[index_B] = temp;
 }
 
-function heapSort(input) {
-    buildHeap(input);
+function heapSort(array) {
+    buildHeap(array);
 
-    for (var i = input.length - 1; i > 0; i--) {
-        swap(input, 0, i);
+    for (var i = array.length - 1; i > 0; i--) {
+        swap(array, 0, i);
         arrayLength--;
-        heapify(input, 0);
+        heapify(array, 0);
     }
 }
 
-var exampleArray = [40, 10, 50, 24, 1, 2, 4, -10, 15, 7, 8, 5];
+var exampleArray = [7, 5, 2, 1, 4, 3, 6];
 heapSort(exampleArray);
 console.log(exampleArray)
