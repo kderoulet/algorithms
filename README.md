@@ -85,12 +85,12 @@ function mergeSort(arr) {
 
 function merge(left, right) {
     // we're creating an empty array for our results, and we need 
-    // j and k and indexs to cycle through the left and right arrays
+    // j and k (index values) to cycle through the left and right arrays
     let result = [];
     let j = 0;
     let k = 0;
     // here we compare the values and push the lowers values 
-    //into the results array first
+    // into the results array first
     while (j < left.length && k < right.length) {
         if (left[j] <= right[k]) {
             result.push(left[j]);
@@ -100,7 +100,7 @@ function merge(left, right) {
             k++
         }
     }
-    // finally, we concatinate the remaining values into
+    // finally, we concatenate the remaining values into
     // our results array
     return result.concat(left.slice(j)).concat(right.slice(k));
 }
@@ -148,7 +148,7 @@ function insertionSort(arr) {
 }
 
 let exampleArray = [7, 5, 2, 1, 4, 3, 6]
-insertionSort(exampleArray)
+insertionSort(exampleArray) // [1, 2, 3, 4, 5, 6, 7]
 ```
 
 Insertion short is very useful for small datasets, but its worst-case (and average) run-time make it too slow to use for large datasets. The next sort method we will look at is heapsort, which has a worst-case sort time of O(n log n), making it much more suitable for handling large sets of data. 
@@ -161,61 +161,62 @@ Heapsort is considerably more complex than the sorting methods we have examined 
 
 Earlier in this document, we explored merge sort, an efficient and popular sorting method. Both merge sort and heap sort have runtimes of O(n log n). So, what is difference between merge sort and heap sort?
 
-Heap sort typically runs faster on slower machines, as heap sort requires less external memory than merge sort. However, on modern computers, merge sort tends to be more efficient because it accesses values sequentially rather than accessing at various points throughout the array, as heapsort does. Additionally, merge sort is "stable" in that equivalent values will retain their ordering, while they could be swapped using heap sort. So, although the two sorting methods are very similar, individual use cases could prefer one sorting method to the other.
+First, given a sorted input, Heapsort has the better runtime of O(n). Additionally, heap sort typically runs faster on slower machines, as heap sort requires less external memory than merge sort. However, on modern computers, merge sort tends to be more efficient because it accesses values sequentially rather than accessing at various points throughout the array, as heapsort does. Additionally, merge sort is "stable" in that equivalent values will retain their ordering, while they could be swapped using heap sort. So, although the two sorting methods are very similar, individual use cases could prefer one sorting method to the other.
 
 #### Okay, but how does heap sort work?
+
+Heap sort has multiple steps to it, so this section will break down what must happen conceptually before we put heap sort into action below.
+
+First, heap sort must accept an array and build a heap with it. A heap is a data structure that resembles a tree--in this case, the result is an array ordered as a binary tree. This array is built by taking the first half of the array and comparing index values to those with an index `2 * i + 1` and `2 * i + 2`, where i is the index of the original value. Whichever value here is largest among the others will be swapped into the front half of the array, and the process iterates until the entire array is sorted as a binary array.
+
+Second, heap sort takes this array
 
 #### Heapsort in action
 
 ```js
-var arrayLength;
+let arrayLength;
 
-function buildHeap(input) {
-    arrayLength = input.length;
+function heapSort(array) {
+    buildHeap(array);
 
-    for (var i = Math.floor(arrayLength / 2); i >= 0; i -= 1) {
-        heapify(input, i);
+    for (let i = array.length - 1; i > 0; i--) {
+        swap(array, 0, i);
+        arrayLength--;
+        heapify(array, 0);
     }
 }
 
-function heapify(input, i) {
-    var left = 2 * i + 1;
-    var right = 2 * i + 2;
-    var largest = i;
+function buildHeap(array) {
+    arrayLength = array.length;
+    for (let i = Math.floor(arrayLength / 2); i >= 0; i--) {
+        heapify(array, i);
+    }
+}
 
-    if (left < arrayLength && input[left] > input[largest]) {
+function heapify(array, i) {
+    let left = 2 * i + 1;
+    let right = 2 * i + 2;
+    let largest = i;
+    if (left < arrayLength && array[left] > array[largest]) {
         largest = left;
     }
-
-    if (right < arrayLength && input[right] > input[largest]) {
+    if (right < arrayLength && array[right] > array[largest]) {
         largest = right;
     }
-
     if (largest != i) {
-        swap(input, i, largest);
-        heapify(input, largest);
+        swap(array, i, largest);
+        heapify(array, largest);
     }
 }
 
-function swap(input, index_A, index_B) {
-    var temp = input[index_A];
-
-    input[index_A] = input[index_B];
-    input[index_B] = temp;
+function swap(array, firstIndex, secondIndex) {
+    let temp = array[firstIndex];
+    array[firstIndex] = array[secondIndex];
+    array[secondIndex] = temp;
 }
 
-function heapSort(input) {
-    buildHeap(input);
-
-    for (var i = input.length - 1; i > 0; i--) {
-        swap(input, 0, i);
-        arrayLength--;
-        heapify(input, 0);
-    }
-}
-
-var exampleArray = [40, 10, 50, 24, 1, 2, 4, -10, 15, 7, 8, 5];
-heapSort(exampleArray);
+let exampleArray = [7, 5, 2, 1, 4, 3, 6];
+heapSort(exampleArray); // [1, 2, 3, 4, 5, 6, 7]
 ```
 
 
