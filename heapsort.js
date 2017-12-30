@@ -7,6 +7,7 @@ function heapSort(array) {
         swap(array, 0, i);
         arrayLength--;
         heapify(array, 0);
+        console.log('sorting array ' + array)        
     }
 }
 
@@ -14,6 +15,7 @@ function buildHeap(array) {
     arrayLength = array.length;
     for (let i = Math.floor(arrayLength / 2); i >= 0; i--) {
         heapify(array, i);
+        console.log('building heap: ' + array)        
     }
 }
 

@@ -167,9 +167,24 @@ First, given a sorted input, Heapsort has the better runtime of O(n). Additional
 
 Heap sort has multiple steps to it, so this section will break down what must happen conceptually before we put heap sort into action below.
 
-First, heap sort must accept an array and build a heap with it. A heap is a data structure that resembles a tree--in this case, the result is an array ordered as a binary tree. This array is built by taking the first half of the array and comparing index values to those with an index `2 * i + 1` and `2 * i + 2`, where i is the index of the original value. Whichever value here is largest among the others will be swapped into the front half of the array, and the process iterates until the entire array is sorted as a binary array.
+First, heap sort must accept an array and build a heap with it. A heap is a data structure that resembles a tree--in this case, the result is an array ordered as a binary tree (see aside below for more info). This array is built by taking the first half of the array and comparing values to those with an index `2 * i + 1` and `2 * i + 2`, where i is the index of the original value. Whichever value here is largest among the others will be swapped into the front half of the array, and the process iterates until the entire array is sorted as a binary tree. Our example array of `[7, 5, 2, 1, 4, 3, 6]` would be built into a heap as follows:
+```js
+[7,5,2,1,4,3,6]
+[7,5,6,1,4,3,2]
+[7,5,6,1,4,3,2]
+[7,5,6,1,4,3,2]
+```
 
-Second, heap sort takes this array
+Second, heap sort takes this array (starting from the end) and swaps the smallest values to the front by the same process as above. So, heaped array above is sorted as follows:
+```js
+[6,5,3,1,4,2,7]
+[5,4,3,1,2,6,7]
+[4,2,3,1,5,6,7]
+[3,2,1,4,5,6,7]
+[2,1,3,4,5,6,7]
+[1,2,3,4,5,6,7]
+```
+The end result is a sorted array. So, here is an example of an implementation of heap sort. 
 
 #### Heapsort in action
 
@@ -218,6 +233,8 @@ function swap(array, firstIndex, secondIndex) {
 let exampleArray = [7, 5, 2, 1, 4, 3, 6];
 heapSort(exampleArray); // [1, 2, 3, 4, 5, 6, 7]
 ```
+#### Quick Aside: Binary Trees
+
 
 
 ## Quick Sort
