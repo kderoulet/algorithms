@@ -35,7 +35,7 @@ Before diving into sorting algorithms, it's worth understanding the way in which
 
 ## Mergesort (mergesort.js)
 
-Mergesort is a pretty cool sorting algorithm. It's efficient, it's effective, and it's pretty!
+Mergesort is a pretty cool sorting algorithm. It's efficient, it's effective, and it's pretty! Mergesort is what array.sort() performs when run in Mozilla. 
 
 Mergesort accepts an array as an argument, and it returns a new array with all of the old array's values sorted from least to greatest.
 
@@ -110,7 +110,7 @@ The next sorting algorithm we'll look at--called insertion sort--has a best-case
 
 ## Insertion Sort 
 
-Insertion sort is an interesting sorting algorithm because it closely mimicks how people might sort things (such as a hand of cards) in real life. Similar to real-life sorting, it can be quite efficient for small data sets but inefficient for very large data sets. 
+Insertion sort is an interesting sorting algorithm because it closely mimicks how people might sort things (such as a hand of cards) in real life. Similar to real-life sorting, it can be quite efficient for small data sets but inefficient for very large data sets. In Google Chrome, insertion sort is the method used for array.sort() for small arrays. 
 
 #### How insertion sort works
 
@@ -238,5 +238,11 @@ heapSort(exampleArray); // [1, 2, 3, 4, 5, 6, 7]
 
 
 ## Quick Sort
+
+For large arrays, Google Chrome uses quicksort for its implementation of array.sort(). 
+
+#### How Quick Sort works
+
+Quick sort takes a value (the "pivot") and compares values on either side of this pivot. 
 
 ## The Fibonacci Sequence
