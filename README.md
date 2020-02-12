@@ -246,3 +246,35 @@ For large arrays, Google Chrome uses quicksort for its implementation of array.s
 Quick sort takes a value (the "pivot") and compares values on either side of this pivot. 
 
 ## The Fibonacci Sequence
+
+## Dynamic Connectivity
+
+Given a number of points and connections, determine whether or not two points are connected.
+
+Quickfind: 
+Here, we have our data represented as an array. An array 10 unconnected numbers might be `[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]` while a fully connected array is `[9, 9, 9, 9, 9, 9, 9, 9, 9, 9]`. 
+Given quickFind(a, b), if a and b have the same ID, then a is connected to be.
+
+So, given `[0, 1, 1, 3, 4, 5, 3, 3, 8, 9]` quickFind(1, 2) will be true. 
+
+Such an implementation might look like this:
+
+```js 
+let array = [0, 1, 1, 3, 4, 5, 3, 3, 8, 9]
+function quickFind(a, b) {
+    return array[a] == array[b] ? true : false
+}
+```
+
+However, such an implementation makes the process of connecting two points somewhat more complex. Connecting 2 and 3 in the above example would require us to turn every 1 into a 3 (or every 3 into a 1). So our union function would look something like this:
+```js 
+let array = [0, 1, 1, 3, 4, 5, 3, 3, 8, 9]
+function union(a, b) {
+    for (let i = 0; i < array.length, i++) {
+        let firstValue = array[a]
+        if (array[i] == firstValue) {
+            array[i] = array[b]
+        }
+    }
+}
+```
