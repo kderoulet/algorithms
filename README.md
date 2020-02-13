@@ -10,9 +10,9 @@ Consider a simple factorial function. Such a function might look like this:
 ```js
 function getFactorial(number) {
     if (number == 1) {
-        return number;
+        return number
     }
-    return number * getFactorial(number-1);
+    return number * getFactorial(number-1)
 }
 ```
 As a reminder, a factorial takes a value and multiplies it by each descending non-negative, non-zero integer. So 5 factorial (5!) gives us `5*4*3*2*1` = 120. (The above function ignores edge cases; see recursion.js for a fleshed out example)
@@ -21,21 +21,28 @@ So, how does the above function work? Let's take getFactorial(5) as our example.
 1. The function is called with the number 5 as an argument.
 2. Since 5 != 1, the number is not returned.
 3. So 5 * getFactorial(4) is returned.
-4. The function continues to loop until `number == 1`, when only , so we are left with `5*4*3*2*1`. 
+4. The function continues to loop until `number == 1`, when only 1 is returned, so we are left with `5*4*3*2*1`. 
 
 Now, the factorial example might not be the best use case for a recursive function, but hopefully the above example does demonstrate essentially how recursive functions work. 
 
 #### An aside: Recursion or Iteration?
 
-All iterative functions can be written recursively, and all recursive functions can be written iteratively. So, when do we choose one or the other? Essentially, when an iterative solution makes sense, it's a good time for for iteration. When recursion makes more sense then it's a good time for recursion. Often, those with traditional computer science backgrounds prefer recursive approaches, while developers without traditional computer science backgrounds tend to first learn iterative solutions (especially for-loops). Iterative functions often make the most sense with linear processes, such as comparing each value in an array to each value in another array. Recursive functions tend to be an especially good option when a "divide and conquer" approach is needed for solving a problem, such as our next alogorithm: mergesort.
+All iterative functions can be written recursively, and all recursive functions can be written iteratively. So, when do we choose one or the other? Essentially, when an iterative solution makes sense, it's a good time for iteration. When recursion makes more sense, then it's a good time for recursion. Often, those with traditional computer science backgrounds prefer recursive approaches, while developers without traditional computer science backgrounds tend to first learn iterative solutions (especially for-loops). Iterative functions often make the most sense with linear processes, such as comparing each value in an array to each value in another array. Recursive functions tend to be an especially good option when a "divide and conquer" approach is needed for solving a problem, such as our next alogorithm: mergesort.
+
+#### Divide and Conquer
+
+Dividing and conquering has 3 steps at each level of recursion: 
+1. Divide the problem into subproblems that replicate the problem at a smaller scale.
+2. Conquer the problems by solving recursively (or, if the subproblems are sufficiently small, solve the subproblems in a cleaner, more straightforward manner).
+3. Combine the solutions to the subproblems into the solution for the original problem. 
 
 ## Big O notation
 
-Before diving into sorting algorithms, it's worth understanding the way in which sorting algorithms are evaluated. An advantage of mergesort is that its runtime is consistant O(n log n). Of course, in some situations, this can be a disadvantage--mergesort takes just as long to sort an already ordered array as a randomly ordered array. 
+Before diving into sorting algorithms, it's worth understanding the way in which sorting algorithms are evaluated. Algorithms are typically evaluated in big O notation, which is meant to show how the algorithm's runtime increases in proportion to its input. For instance, a perfectly efficient algorithm would have a runtime of O(1)--this demonstrates that as the input length increases, the algorithm's runtime stays constant. O(n) depicts linear growth--as the input length increases, the runtime increases proportionally. O(n^2) depicts exponential growth--as the input length increases, the runtime increases exponentially.
 
 ## Mergesort (mergesort.js)
 
-Mergesort is a pretty cool sorting algorithm. It's efficient, it's effective, and it's pretty! Mergesort is what array.sort() performs when run in Mozilla. 
+An advantage of mergesort is that its runtime is consistant O(n log n). Of course, in some situations, this can be a disadvantage--mergesort takes just as long to sort an already ordered array as a randomly ordered array. Furthermore, because of the overhead processes of mergesort, it can be slower for sorting small arrays than algorithms which are inefficient for sorting large arrays. Mergesort is roughly what array.sort() performs when run in Mozilla. 
 
 Mergesort accepts an array as an argument, and it returns a new array with all of the old array's values sorted from least to greatest.
 
@@ -52,11 +59,10 @@ The first step in mergesort is to break this array down into smaller arrays. Thi
 [26] [35] [11] [197, 4]
 [26] [35] [11] [197] [4]
 ```
-So, the arrays are recursively divided in half until each array's length is `<1`. Next, the values on each side are reassembled into a sorted array. Finally, the two remaining sorted arrays are compared with each other, and the result array is built through comparing the two sorted arrays. 
+So, the arrays are recursively divided in half until each array's length is `<2`. Next, the values on each side are reassembled into a sorted array. Finally, the two remaining sorted arrays are compared with each other, and the result array is built through comparing the two sorted arrays. 
 
 ```js
  [26] [35] [11] [197] [4]
-   [26]      [11]   [4]
   [26, 35]    [4, 11] [197]
   [26, 35]    [4, 11, 197]
            [4]
@@ -70,13 +76,13 @@ So, the arrays are recursively divided in half until each array's length is `<1`
 
 ```js
 function mergeSort(arr) {
-    // our base case: we want each array
-    // to have a length < 2 
-    if (arr.length < 2)
-    return arr;
+    // our base case:
+    // array length < 2 
+    if (arr.length < 2) return arr
+    // our recursive case: all longer arrays
     // here we cut the larger arrays into halves
     let middle = Math.floor(arr.length / 2)
-    let left = arr.slice(0, middle);
+    let left = arr.slice(0, middle)
     let right = arr.slice(middle)
     // we call mergeSort recursively, and we call merge once each
     // array is broken down
@@ -86,23 +92,23 @@ function mergeSort(arr) {
 function merge(left, right) {
     // we're creating an empty array for our results, and we need 
     // j and k (index values) to cycle through the left and right arrays
-    let result = [];
-    let j = 0;
-    let k = 0;
+    let result = []
+    let j = 0
+    let k = 0
     // here we compare the values and push the lowers values 
     // into the results array first
     while (j < left.length && k < right.length) {
         if (left[j] <= right[k]) {
-            result.push(left[j]);
-            j++;
+            result.push(left[j])
+            j++
         } else {
-            result.push(right[k]);
+            result.push(right[k])
             k++
         }
     }
     // finally, we concatenate the remaining values into
     // our results array
-    return result.concat(left.slice(j)).concat(right.slice(k));
+    return result.concat(left.slice(j)).concat(right.slice(k))
 }
 ```
 
@@ -128,30 +134,56 @@ Insertion sort mutates the original array into a sorted array rather than return
 
 The runtime of insertion sort is totally dependent on the state of the given array. The best-case scenario is that insertion sort is given an already sorted array, in which case the runtime is O(n). An array which is sorted in reverse order(ex: `[3, 2, 1]`) will have a runtime of O(n^2). 
 
-#### Insertion sort implemented
+#### Insertion sort implemented (iteratively)
 ```js
 function insertionSort(arr) {
     // declare our index variables
-    let i;
-    let j;
+    let i
+    let j
     // iterate through the array
     for (i = 0; i < arr.length; i++) {
         // store current position's value in a temporary variable
         let temp = arr[i]
-        // check the value(s) before the current position in the array
+        // iterate back through the array,
+        // swapping values until we find a value > temp
         for (j = i-1; j > -1 && arr[j] > temp; j--) {
             arr[j+1] = arr[j]
         }
-        arr[j+1] = temp;
+        // place temp where it belongs in the array
+        arr[j+1] = temp
     }
-    return arr;
+    return arr
 }
 
 let exampleArray = [7, 5, 2, 1, 4, 3, 6]
 insertionSort(exampleArray) // [1, 2, 3, 4, 5, 6, 7]
 ```
 
-Insertion short is very useful for small datasets, but its worst-case (and average) run-time make it too slow to use for large datasets. The next sort method we will look at is heapsort, which has a worst-case sort time of O(n log n), making it much more suitable for handling large sets of data. 
+#### Insertion sort implemented (recursively)
+```js
+function insertionSort(arr) {
+    
+}
+
+let exampleArray = [7, 5, 2, 1, 4, 3, 6]
+insertionSort(exampleArray) // [1, 2, 3, 4, 5, 6, 7]
+```
+
+
+Insertion sort is very useful for small datasets, but its worst-case (and average) run-time make it too slow to use for large datasets. Because insertion sort has very little overhead, it can be substantially faster than mergesort for small arrays--in fact, one way to improve mergesort's performance is to incoporate insertionsort once the arrays get small enough:
+
+```js
+function hybridMergeInsertSort(arr) {
+    if (arr.length < 10) return insertionSort(arr)
+    let middle = Math.floor(arr.length / 2)
+    let left = arr.slice(0, middle)
+    let right = arr.slice(middle)
+    return merge(hybridMergeInsertSort(left), hybridMergeInsertSort(right))
+}
+```
+The above hybrid will often be substantially faster than mergesort because of its low-overhead implementation for small arrays, and it is many times faster than a simple insertionsort implementation for large arrays. 
+
+The next sorting method we will look at is heapsort, which has a worst-case sort time of O(n log n), making it suitable for handling large sets of data. 
 
 ## Heap Sort
 

@@ -8,4 +8,5 @@ function getFactorial(num) {
     }
     return num * getFactorial(num-1)
 }
-console.log(getFactorial(5))
+
+module.exports = getFactorial
