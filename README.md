@@ -134,7 +134,7 @@ Insertion sort mutates the original array into a sorted array rather than return
 
 The runtime of insertion sort is totally dependent on the state of the given array. The best-case scenario is that insertion sort is given an already sorted array, in which case the runtime is O(n). An array which is sorted in reverse order(ex: `[3, 2, 1]`) will have a runtime of O(n^2). 
 
-#### Insertion sort implemented (iteratively)
+#### Insertion sort implemented
 ```js
 function insertionSort(arr) {
     // declare our index variables
@@ -158,17 +158,6 @@ function insertionSort(arr) {
 let exampleArray = [7, 5, 2, 1, 4, 3, 6]
 insertionSort(exampleArray) // [1, 2, 3, 4, 5, 6, 7]
 ```
-
-#### Insertion sort implemented (recursively)
-```js
-function insertionSort(arr) {
-    
-}
-
-let exampleArray = [7, 5, 2, 1, 4, 3, 6]
-insertionSort(exampleArray) // [1, 2, 3, 4, 5, 6, 7]
-```
-
 
 Insertion sort is very useful for small datasets, but its worst-case (and average) run-time make it too slow to use for large datasets. Because insertion sort has very little overhead, it can be substantially faster than mergesort for small arrays--in fact, one way to improve mergesort's performance is to incoporate insertionsort once the arrays get small enough:
 
@@ -275,7 +264,75 @@ For large arrays, Google Chrome uses quicksort for its implementation of array.s
 
 #### How Quick Sort works
 
-Quick sort takes a value (the "pivot") and compares values on either side of this pivot. 
+Quick sort takes a value (the "pivot") and compares values on either side of this pivot. This process is repeated by recursion until the arrays are broken down into their base case. The arrays are then assembled in order.
+
+Given the sample array `[7, 5, 2, 1, 4, 3, 6]`, we would see it broken down as such (here, the last item in the array is choesn as the pivot--any item in the array could be used as the pivot, but this is clearer from a code-writing and demonstration perspective):
+
+```js
+[7, 5, 2, 1, 4, 3, 6]
+                // ^ pivot
+[5, 2, 1, 4, 3] [6] [7]
+        //   ^ pivot
+[2, 1] [3] [5, 4] [6] [7]
+//  ^ pivot    ^ pivot
+[1] [2] [3] [4] [5] [6] [7]
+[1, 2] [3] [4, 5] [6] [7]
+[1, 2, 3, 4, 5] [6] [7]
+[1, 2, 3, 4, 5, 6, 7]
+```
+
+#### Quicksort Implemented
+```js
+function quickSort(arr) {
+    // base case: arr length < 2
+    // we can't compare values to a pivot if the pivot would be the only value
+    if (arr.length < 2) return arr
+    // assigning the last value in the array as the pivot
+    let pivot = arr[arr.length-1]
+    // two empty array for values <= the pivot and for values > the pivot
+    let left = [], right = []
+    // we want to exclude the pivot from our comparisons:
+    // can't compare the pivot to itself!
+    for (let i = 0; i < arr.length-1; i++) {
+        if (arr[i] <= pivot) {
+            left.push(arr[i])
+        } else {
+            right.push(arr[i])
+        }
+    }
+    // sort the smaller arrays and combine together
+    return quickSort(left).concat(pivot).concat(quickSort(right))
+}
+```
+
+Quicksort is generally a very fast algorithm due to its low overhead; it is often close to keeping up with insertionsort on small arrays, and it generally keeps up with mergesort depite its slow worst-case runtime of O(n^2) (my testing found that among javascript implementations, mergesort becomes clearly faster when n >= ~28000). However, it does have a vulnerability: inputs that are sorted in order or in reverse order will cause quicksort to perform quite slowly, even leading to premature stack overflow--when n=5000, my tests found that quicksort takes 25x as long to run given a typical random array and a worst-case array. This is because each recursion splits the arrays into three segments: the left, the pivot, and the right. When the array is sorted (whether in order or in reverse order), each recursion of array n splits the array inefficiently: the left or right (depending on the order) is empty, the pivot has 1 item, and the right or left has n-1 items. This maximizes the number of recursions necessary to complete sorting.
+
+So we might try a more random pivot selection: 
+
+```js
+function randomQuickSort(arr) {
+    if (arr.length < 2) return arr
+    // choosing a random pivot rather than a predictable pivot
+    let pivotIndex = Math.floor(Math.random() * arr.length)
+    let pivot = arr[pivotIndex]
+    let left = [], right = []
+    for (let i = 0; i < arr.length; i++) {
+        // ensure that we don't duplicate the pivot in another array
+        if (i === pivotIndex) {
+            continue
+        } else if (arr[i] <= pivot) {
+            left.push(arr[i])
+        } else {
+            right.push(arr[i])
+        }
+    }
+    return randomQuickSort(left).concat(pivot).concat(randomQuickSort(right))
+}
+```
+
+Using this random pivot selection strategy makes the algorithm less vulnerable to malicious inputs. My testing found that when n=8000, the randomized pivot implementation sorts the array more than 100x faster than quicksort would alone.
+
+Optimization of pivot selection is key to making quicksort an effective algorithm at scale.
 
 ## The Fibonacci Sequence
 

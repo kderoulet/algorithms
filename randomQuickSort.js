@@ -1,6 +1,6 @@
 function randomQuickSort(arr) {
     if (arr.length < 2) return arr
-    let pivotIndex = Math.floor(Math.random() * 2)
+    let pivotIndex = Math.floor(Math.random() * arr.length)
     let pivot = arr[pivotIndex]
     let left = [], right = []
     for (let i = 0; i < arr.length; i++) {
