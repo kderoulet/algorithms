@@ -1,4 +1,4 @@
-# Algorithms
+# Sorting Algorithms
 A repository for learning algorithms and other relevant computer science topics, all modeled in JavaScript. 
 
 ## Intro to Recursion (recursion.js)
@@ -182,7 +182,7 @@ Heapsort is considerably more complex than the sorting methods we have examined 
 
 Earlier in this document, we explored merge sort, an efficient and popular sorting method. Both merge sort and heap sort have runtimes of O(n log n). So, what is difference between merge sort and heap sort?
 
-First, given a sorted input, Heapsort has the better runtime of O(n). Additionally, heap sort typically runs faster on slower machines, as heap sort requires less external memory than merge sort. However, on modern computers, merge sort tends to be more efficient because it accesses values sequentially rather than accessing at various points throughout the array, as heapsort does. Additionally, merge sort is "stable" in that equivalent values will retain their ordering, while they could be swapped using heap sort. So, although the two sorting methods are very similar, individual use cases could prefer one sorting method to the other.
+First, given a sorted input, Heapsort has the better runtime of O(n). Additionally, heap sort typically runs faster on slower machines, as heap sort works "in place", thus requiring less external memory than merge sort. However, on modern computers, merge sort tends to be more efficient because it accesses values sequentially rather than accessing at various points throughout the array, as heapsort does. Additionally, merge sort is "stable" in that equivalent values will retain their ordering, while they could be swapped using heap sort. So, although the two sorting methods are very similar, individual use cases could prefer one sorting method to the other. My own testing has found that for javascript implementations, heapsort's low overhead makes it substantially faster than javascript implementations of mergesort.
 
 #### Okay, but how does heap sort work?
 
@@ -210,160 +210,155 @@ The end result is a sorted array. So, here is an example of an implementation of
 #### Heapsort in action
 
 ```js
-let arrayLength;
+function heapSort(arr) {
+    // step 1 is to build a max heap with the array
+    buildMaxHeap(arr)
+    // once the array is a heap, we swap the largest value
+    // into the end of the array, and then repeat
+    // 2nd largest into 2nd to last slot
+    // 3rd largest into 3rd to last slot etc.
+    for (let i = arr.heapSize - 1; i > 0; i--) {
+        swap(arr, 0, i)
+        arr.heapSize--
+        maxHeapify(arr, 0)
+    }
+    delete arr.heapSize
+    return arr
+}
 
-function heapSort(array) {
-    buildHeap(array);
-
-    for (let i = array.length - 1; i > 0; i--) {
-        swap(array, 0, i);
-        arrayLength--;
-        heapify(array, 0);
+function buildMaxHeap(arr) {
+    // the heapsize contains the portion of the array that is a heap
+    // this decreases as we sort the heap into a sorted array
+    arr.heapSize = arr.length
+    for (let i = Math.floor(arr.heapSize / 2); i >= 0; i--) {
+        maxHeapify(arr, i)
     }
 }
 
-function buildHeap(array) {
-    arrayLength = array.length;
-    for (let i = Math.floor(arrayLength / 2); i >= 0; i--) {
-        heapify(array, i);
+function maxHeapify(arr, i) {
+    // the left and right values are the indexes
+    // of where the child elements should be in the tree
+    let left = 2*i + 1
+    let right = 2*i + 2
+    let largest = i
+    if (left < arr.heapSize && arr[left] > arr[largest]) {
+        largest = left
     }
-}
-
-function heapify(array, i) {
-    let left = 2 * i + 1;
-    let right = 2 * i + 2;
-    let largest = i;
-    if (left < arrayLength && array[left] > array[largest]) {
-        largest = left;
-    }
-    if (right < arrayLength && array[right] > array[largest]) {
-        largest = right;
+    if (right < arr.heapSize && arr[right] > arr[largest]) {
+        largest = right
     }
     if (largest != i) {
-        swap(array, i, largest);
-        heapify(array, largest);
+        swap(arr, i, largest)
+        maxHeapify(arr, largest)
     }
 }
 
-function swap(array, firstIndex, secondIndex) {
-    let temp = array[firstIndex];
-    array[firstIndex] = array[secondIndex];
-    array[secondIndex] = temp;
+function swap(arr, firstIndex, secondIndex) {
+    let temp = arr[firstIndex]
+    arr[firstIndex] = arr[secondIndex]
+    arr[secondIndex] = temp
 }
 
-let exampleArray = [7, 5, 2, 1, 4, 3, 6];
-heapSort(exampleArray); // [1, 2, 3, 4, 5, 6, 7]
+
+let exampleArray = [7, 5, 2, 1, 4, 3, 6]
+heapSort(exampleArray) // [1, 2, 3, 4, 5, 6, 7]
 ```
 #### Quick Aside: Binary Trees
 
+The binary heap data structure is an array that contains the data of a binary tree. The binary heap has two properties: length, which (like a normal array) returns the number of items in the array, and heapSize, which represents the number of elements in the heap which are stored in the array. The heapSize decreases as we sort the heap into a sorted array.
 
+The root of the binary tree is element `[0]`.
 
 ## Quick Sort
 
-For large arrays, Google Chrome uses quicksort for its implementation of array.sort(). 
+For large arrays, Google Chrome uses quicksort for its implementation of array.sort(). Although it's worst-case runtime is O(n^2), it has an average runtime of O(n log n), and its low overhead makes it often a very fast option for sorting arrays of many sizes.
 
 #### How Quick Sort works
 
 Quick sort takes a value (the "pivot") and compares values on either side of this pivot. This process is repeated by recursion until the arrays are broken down into their base case. The arrays are then assembled in order.
 
-Given the sample array `[7, 5, 2, 1, 4, 3, 6]`, we would see it broken down as such (here, the last item in the array is choesn as the pivot--any item in the array could be used as the pivot, but this is clearer from a code-writing and demonstration perspective):
+Given the sample array `[7, 5, 2, 1, 4, 3, 6]`, we would see it broken down as such:
 
 ```js
 [7, 5, 2, 1, 4, 3, 6]
-                // ^ pivot
-[5, 2, 1, 4, 3] [6] [7]
-        //   ^ pivot
-[2, 1] [3] [5, 4] [6] [7]
-//  ^ pivot    ^ pivot
-[1] [2] [3] [4] [5] [6] [7]
-[1, 2] [3] [4, 5] [6] [7]
-[1, 2, 3, 4, 5] [6] [7]
-[1, 2, 3, 4, 5, 6, 7]
+             // ^ pivot
+[5, 2, 1, 4, 3, 6, 7]
+    // ^ pivot
+[ 2, 1, 3, 4, 5, 6, 7 ]
+//^ pivot
+[ 1, 2, 3, 4, 5, 6, 7 ]
 ```
 
 #### Quicksort Implemented
 ```js
-function quickSort(arr) {
-    // base case: arr length < 2
-    // we can't compare values to a pivot if the pivot would be the only value
-    if (arr.length < 2) return arr
-    // assigning the last value in the array as the pivot
-    let pivot = arr[arr.length-1]
-    // two empty array for values <= the pivot and for values > the pivot
-    let left = [], right = []
-    // we want to exclude the pivot from our comparisons:
-    // can't compare the pivot to itself!
-    for (let i = 0; i < arr.length-1; i++) {
-        if (arr[i] <= pivot) {
-            left.push(arr[i])
-        } else {
-            right.push(arr[i])
+// default values for intitial function call
+function quickSort(arr, p=0, r=arr.length-1) {
+    //base condition: is the array segment being compared >0
+    if (p < r) {
+        // q will be the pivot
+        let q = partition(arr, p, r)
+        quickSort(arr, p, q-1)
+        quickSort(arr, q+1, r)
+    }
+}
+
+// useful swap function to switch the places of two values
+function swap(arr, firstIndex, secondIndex) {
+    let temp = arr[firstIndex]
+    arr[firstIndex] = arr[secondIndex]
+    arr[secondIndex] = temp
+}
+
+// partition is the meat of quicksort
+// splits up values between p and r
+// to be on the correct side of the pivot
+function partition(arr, p, r) {
+    let i = p-1
+    for (let j = p; j < r; j++) {
+        if (arr[j] <= arr[r]) {
+            i = i+1
+            swap(arr, i, j)
         }
     }
-    // sort the smaller arrays and combine together
-    return quickSort(left).concat(pivot).concat(quickSort(right))
+    swap(arr, i+1, r)
+    // return the pivot value
+    return i+1
 }
 ```
 
-Quicksort is generally a very fast algorithm due to its low overhead; it is often close to keeping up with insertionsort on small arrays, and it generally keeps up with mergesort depite its slow worst-case runtime of O(n^2) (my testing found that among javascript implementations, mergesort becomes clearly faster when n >= ~28000). However, it does have a vulnerability: inputs that are sorted in order or in reverse order will cause quicksort to perform quite slowly, even leading to premature stack overflow--when n=5000, my tests found that quicksort takes 25x as long to run given a typical random array and a worst-case array. This is because each recursion splits the arrays into three segments: the left, the pivot, and the right. When the array is sorted (whether in order or in reverse order), each recursion of array n splits the array inefficiently: the left or right (depending on the order) is empty, the pivot has 1 item, and the right or left has n-1 items. This maximizes the number of recursions necessary to complete sorting.
+Quicksort is generally a very fast algorithm due to its low overhead; it is often close to keeping up with insertionsort on small arrays, and it generally keeps up with mergesort depite its slow worst-case runtime of O(n^2) (my testing found that among javascript implementations, mergesort becomes clearly faster when n >= ~1200000). However, it does have a vulnerability: inputs that are sorted in order or in reverse order will cause quicksort to perform quite slowly, even leading to premature stack overflow--when n=2500, my tests found that quicksort takes 4x as long to run given a typical random array and a worst-case array. This is because each recursion splits the arrays into three segments: the left(p...q-1), the pivot, and the right(q+1...r). When the array is sorted (whether in order or in reverse order), each recursion of array n splits the array inefficiently: the left or right (depending on the order) is empty, the pivot has 1 item, and the right or left has n-1 items. This maximizes the number of recursions necessary to complete sorting.
 
-So we might try a more random pivot selection: 
+Once way to prevent this is by changing partition to a randomized partition: 
 
 ```js
-function randomQuickSort(arr) {
-    if (arr.length < 2) return arr
-    // choosing a random pivot rather than a predictable pivot
-    let pivotIndex = Math.floor(Math.random() * arr.length)
-    let pivot = arr[pivotIndex]
-    let left = [], right = []
-    for (let i = 0; i < arr.length; i++) {
-        // ensure that we don't duplicate the pivot in another array
-        if (i === pivotIndex) {
-            continue
-        } else if (arr[i] <= pivot) {
-            left.push(arr[i])
-        } else {
-            right.push(arr[i])
+function randomizedPartition(arr, p, r) {
+    // we want a random int between p and r
+    let i = Math.floor(Math.random() * (r - p) + p)
+    swap(arr, i, r)
+    i = p-1
+    for (let j = p; j < r; j++) {
+        if (arr[j] <= arr[r]) {
+            i = i+1
+            swap(arr, i, j)
         }
     }
-    return randomQuickSort(left).concat(pivot).concat(randomQuickSort(right))
+    swap(arr, i+1, r)
+    return i+1
 }
 ```
 
-Using this random pivot selection strategy makes the algorithm less vulnerable to malicious inputs. My testing found that when n=8000, the randomized pivot implementation sorts the array more than 100x faster than quicksort would alone.
+Using this random swapping strategy makes the algorithm less vulnerable to malicious inputs. My testing found that when n=4000, the randomized pivot implementation sorts the array more than 9x faster than quicksort would alone.
 
-Optimization of pivot selection is key to making quicksort an effective algorithm at scale.
+There are still more ways to improve quicksort. The two recursive calls to quicksort limit the amount of data that it can handle without stack overflow. We can rewrite the quickSort function with iteration in place of one of the recursive calls, greatly expanding its capacity, and somewhat increasing its efficiency.
 
-## The Fibonacci Sequence
-
-## Dynamic Connectivity
-
-Given a number of points and connections, determine whether or not two points are connected.
-
-Quickfind: 
-Here, we have our data represented as an array. An array 10 unconnected numbers might be `[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]` while a fully connected array is `[9, 9, 9, 9, 9, 9, 9, 9, 9, 9]`. 
-Given quickFind(a, b), if a and b have the same ID, then a is connected to be.
-
-So, given `[0, 1, 1, 3, 4, 5, 3, 3, 8, 9]` quickFind(1, 2) will be true. 
-
-Such an implementation might look like this:
-
-```js 
-let array = [0, 1, 1, 3, 4, 5, 3, 3, 8, 9]
-function quickFind(a, b) {
-    return array[a] == array[b] ? true : false
-}
-```
-
-However, such an implementation makes the process of connecting two points somewhat more complex. Connecting 2 and 3 in the above example would require us to turn every 1 into a 3 (or every 3 into a 1). So our union function would look something like this:
-```js 
-let array = [0, 1, 1, 3, 4, 5, 3, 3, 8, 9]
-function union(a, b) {
-    for (let i = 0; i < array.length, i++) {
-        let firstValue = array[a]
-        if (array[i] == firstValue) {
-            array[i] = array[b]
-        }
+```js
+function quickSort(arr, p=0, r=arr.length-1) {
+    while (p < r) {
+        let q = randomizedPartition(arr, p, r)
+        quickSort(arr, p, q-1)
+        p = q+1
     }
 }
 ```
+
+We can further improve the runtime of quicksort over picking a random item from the subarray as the pivot; we can make the pivot the median of 3 values in the array. 

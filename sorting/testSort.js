@@ -18,8 +18,8 @@ for (let i = 0; i < 100; i++) {
 for (let i = 0; i < 1000; i++) {
     array1000.push(getNum())
 }
-// for (let i = 10000; i >= 0; i--) {
-for (let i = 0; i < 30000; i++) {
+// for (let i = 5000; i >= 0; i--) {
+for (let i = 0; i < 10000; i++) {
     array10000.push(getNum())
     // for worst case quicksort
     // array10000.push(i)

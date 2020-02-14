@@ -1,3 +1,9 @@
+//actually much slower than quicksort:
+// uses quicksort pivoting and partitioning
+// combined with some needless iterating,
+// needless extra memory
+// and needless recombining
+
 function quickSort(arr) {
     if (arr.length < 2) return arr
     let pivot = arr[arr.length-1]
